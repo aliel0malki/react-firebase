@@ -36,7 +36,7 @@ export const Auth = () => {
     // Render Component
     return (
         <div>
-            <div>
+            <div className="mt-5">
                 <form>
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">

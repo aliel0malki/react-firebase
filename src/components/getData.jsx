@@ -39,6 +39,7 @@ const GetData = () => {
         }
     };
 
+    // Fetch Data From Firebase
     const getMoviesList = async () => {
         try {
             const data = await getDocs(moviesListCollection);
@@ -55,7 +56,7 @@ const GetData = () => {
 
     useEffect(() => {
         getMoviesList();
-    }, [moviesList]);
+    }, []);
 
     const onSubmitMovie = async () => {
         try {
@@ -67,6 +68,7 @@ const GetData = () => {
                 creatorId: auth?.currentUser?.uid,
             });
             uploadFile();
+            getMoviesList();
         } catch (err) {
             console.error(err);
         }
@@ -75,6 +77,7 @@ const GetData = () => {
     const deleteMovie = async (id) => {
         const movieDoc = doc(DB, "movies", id);
         await deleteDoc(movieDoc);
+        getMoviesList();
     };
 
     const updateMovie = async (id) => {
@@ -82,6 +85,7 @@ const GetData = () => {
         await updateDoc(movieDoc, {
             name: updatedMovieName,
         });
+        getMoviesList();
     };
 
     const uploadFile = async () => {
@@ -153,7 +157,7 @@ const GetData = () => {
                         onChange={(e) => setMovieWinOscar(e.target.checked)}
                     />
                     <label class="form-check-label" for="winOscar">
-                        Who Win Oscar?
+                        Win Oscar?
                     </label>
                 </div>
                 <div class="input-group mb-3">
@@ -189,7 +193,7 @@ const GetData = () => {
                     <hr />
                     <div class="mb-3">
                         <label for="updateName" class="form-label">
-                            Update Name
+                            Update Name [ only creator ]
                         </label>
                         <input
                             type="text"
@@ -205,7 +209,7 @@ const GetData = () => {
                         className="btn btn-danger"
                         onClick={() => deleteMovie(movie.id)}
                     >
-                        Delete Movie
+                        Delete Movie [ only creator ]
                     </button>
                     <button
                         className="btn btn-primary mt-1"
