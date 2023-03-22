@@ -38,6 +38,7 @@ const GetData = () => {
             console.error(err);
         }
     };
+
     const getMoviesList = async () => {
         try {
             const data = await getDocs(moviesListCollection);

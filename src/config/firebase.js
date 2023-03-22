@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+// import { getAnalytics } from "firebase/analytics";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
@@ -21,7 +21,6 @@ const firebaseConfig = {
     measurementId: process.env.MEASUREMENT_ID,
 };
 */
-// GitHub Token = ...
 
 const firebaseConfig = {
     apiKey: "AIzaSyDzHjP-iUD5IQGDtPVtrR_cChsKSNc76SA",
@@ -35,7 +34,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 export const DB = getFirestore(app);

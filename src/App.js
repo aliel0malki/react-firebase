@@ -2,14 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { Auth } from "./components/auth";
 import { GetData } from "./components/getData";
-import {
-    createBrowserRouter,
-    RouterProvider,
-    BrowserRouter,
-    Routes,
-    Route,
-    Link,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
     /*

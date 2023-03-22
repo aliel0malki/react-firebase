@@ -9,7 +9,7 @@ export const Auth = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    console.log(auth?.currentUser?.email);
+    // console.log(auth?.currentUser?.email);
 
     // Sign in Function
     const signIn = async () => {
@@ -67,7 +67,7 @@ export const Auth = () => {
                 </form>
             </div>
             <Link to="/movies">
-                <button onClick={signIn} type="submit" class="btn btn-primary">
+                <button onClick={signIn} class="btn btn-primary">
                     Login in
                 </button>
             </Link>
