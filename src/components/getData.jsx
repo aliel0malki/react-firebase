@@ -10,6 +10,7 @@ import {
 import { signOut } from "firebase/auth";
 import { ref, uploadBytes } from "firebase/storage";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const GetData = () => {
     const [moviesList, setMoviesList] = useState([]);
@@ -32,7 +33,7 @@ const GetData = () => {
         // Create New User
         try {
             await signOut(auth);
-            document.location.href = "/";
+            // document.location.href = "/";
         } catch (err) {
             console.error(err);
         }
@@ -97,9 +98,11 @@ const GetData = () => {
 
     return (
         <>
-            <button className="btn btn-danger mt-3" onClick={logout}>
-                Logout
-            </button>
+            <Link to="/">
+                <button className="btn btn-danger mt-3" onClick={logout}>
+                    Logout
+                </button>
+            </Link>
             <form className="mt-3">
                 <div class="mb-3">
                     <label for="movie_name" class="form-label">

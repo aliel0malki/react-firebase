@@ -2,6 +2,7 @@
 import { auth, googleProvider } from "../config/firebase";
 import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export const Auth = () => {
     // useStates
@@ -15,7 +16,7 @@ export const Auth = () => {
         // Create New User
         try {
             await createUserWithEmailAndPassword(auth, email, password);
-            document.location.href = "/movies";
+            // document.location.href = "/movies";
         } catch (err) {
             console.error(err);
         }
@@ -26,7 +27,7 @@ export const Auth = () => {
         // Create New User
         try {
             await signInWithPopup(auth, googleProvider);
-            document.location.href = "/movies";
+            // document.location.href = "/movies";
         } catch (err) {
             console.error(err);
         }
@@ -65,12 +66,19 @@ export const Auth = () => {
                     </div>
                 </form>
             </div>
-            <button onClick={signIn} type="submit" class="btn btn-primary">
-                Submit
-            </button>
-            <button className="btn btn-success m-1" onClick={signInWithGoogle}>
-                SIGN IN GOOGLE
-            </button>
+            <Link to="/movies">
+                <button onClick={signIn} type="submit" class="btn btn-primary">
+                    Login in
+                </button>
+            </Link>
+            <Link to="/movies">
+                <button
+                    className="btn btn-success m-1"
+                    onClick={signInWithGoogle}
+                >
+                    SIGN IN GOOGLE
+                </button>
+            </Link>
         </div>
     );
 };

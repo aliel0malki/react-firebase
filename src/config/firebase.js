@@ -10,6 +10,19 @@ import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+/*
+const firebaseConfig = {
+    apiKey: process.env.API_KEY,
+    authDomain: process.env.AUTH_DOMAIN,
+    projectId: process.env.PROJECT_ID,
+    storageBucket: process.env.STORAGE_BUCKET,
+    messagingSenderId: process.env.MESSAGEING_SENDER_ID,
+    appId: process.env.APP_ID,
+    measurementId: process.env.MEASUREMENT_ID,
+};
+*/
+// GitHub Token = ...
+
 const firebaseConfig = {
     apiKey: "AIzaSyDzHjP-iUD5IQGDtPVtrR_cChsKSNc76SA",
     authDomain: "react-firebase-65a6c.firebaseapp.com",
