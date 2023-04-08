@@ -9,10 +9,10 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { signOut } from "firebase/auth";
-import { ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { formatDistance, subDays } from "date-fns";
+import { formatDistance } from "date-fns";
 
 const GetData = () => {
   const [moviesList, setMoviesList] = useState([]);
@@ -29,6 +29,9 @@ const GetData = () => {
 
   // File Upload State
   const [fileUpload, setFileUpload] = useState(null);
+  const [progress, setProgress] = useState(0);
+
+  console.log(moviesList);
 
   // Logout Function
   const logout = async () => {
@@ -60,21 +63,42 @@ const GetData = () => {
     getMoviesList();
   }, []);
 
-  const onSubmitMovie = async () => {
-    try {
-      await setDoc(doc(DB, "movies", `${Date.now()}`), {
-        name: movieName,
-        releaseDate: movieReleaseDate,
-        director: movieDirector,
-        winOscar: movieWinOscar,
-        date: Date.now(),
-        creatorId: auth?.currentUser?.uid,
-      });
-      uploadFile();
-      getMoviesList();
-    } catch (err) {
-      console.error(err);
-    }
+  const onSubmitMovie = () => {
+    // Get a reference to the image file and upload it to Firebase Storage
+    const file = fileUpload;
+    const storageRef = ref(storage, `PostersMovies/${fileUpload.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+    // Handle upload progress or errors
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+      },
+      (error) => {
+        // Handle error
+      },
+      async () => {
+        // Handle successful upload
+        // Get the URL of the uploaded image
+        const url = await getDownloadURL(uploadTask.snapshot.ref);
+        // Push a document to Firestore with the URL of the image
+        try {
+          const docRef = await setDoc(doc(DB, "movies", `${Date.now()}`), {
+            name: movieName,
+            releaseDate: movieReleaseDate,
+            director: movieDirector,
+            winOscar: movieWinOscar,
+            date: Date.now(),
+            creatorId: auth?.currentUser?.uid,
+            imgUrl: url,
+          });
+        } catch (error) {
+          console.error("Error adding document: ", error);
+        }
+        getMoviesList();
+        setProgress(0);
+      }
+    );
   };
 
   const deleteMovie = async (id) => {
@@ -92,18 +116,7 @@ const GetData = () => {
     getMoviesList();
   };
 
-  const uploadFile = async () => {
-    if (!fileUpload) return;
-    const projectFilesRef = ref(
-      storage,
-      `/projectFiles/images/${fileUpload.name}`
-    );
-    try {
-      await uploadBytes(projectFilesRef, fileUpload);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const uploadFile = async () => {};
 
   return (
     <>
@@ -164,7 +177,7 @@ const GetData = () => {
         </div>
         <div class="input-group mb-3">
           <label class="input-group-text" for="file_upload">
-            Not Working Now
+            Poster
           </label>
           <input
             type="file"
@@ -174,17 +187,33 @@ const GetData = () => {
           />
         </div>
       </form>
-      <button onClick={onSubmitMovie} class="btn btn-success">
+      <div
+        className="progress"
+        role="progressbar"
+        aria-label="Info example"
+        aria-valuenow={`${progress}`}
+        aria-valuemin="0"
+        aria-valuemax="100"
+      >
+        <div
+          className="progress-bar bg-info text-dark"
+          style={{ width: `${progress}%` }}
+        >
+          {progress}
+        </div>
+      </div>
+      <button onClick={onSubmitMovie} class="btn mt-2 btn-success">
         Submit
       </button>
       <hr />
       {moviesList.map((movie) => (
         <div
           style={{ backgroundColor: "#f1f1f1" }}
-          className="card mt-4 p-2"
+          className="card mb-4 p-2"
           key={movie.id}
         >
-          <h1>{movie.name}</h1>
+          <img src={movie.imgUrl} />
+          <h1 className="mt-2">{movie.name}</h1>
           <h4>The Director > {movie.director}</h4>
 
           <h2>{movie.releaseDate}</h2>
@@ -235,3 +264,31 @@ const GetData = () => {
 };
 
 export { GetData };
+
+/*
+   // Handle upload progress or errors
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // Handle upload progress
+        console.log(snapshot);
+      },
+      (error) => {
+        // Handle error
+      },
+      async () => {
+        // Handle successful upload
+        // Get the URL of the uploaded image
+        const url = await getDownloadURL(uploadTask.snapshot.ref);
+
+        // Push a document to Firestore with the URL of the image
+        try {
+           setDoc(doc(DB, "movies", `${Date.now()}`), {
+        name: movieName,
+        releaseDate: movieReleaseDate,
+        director: movieDirector,
+        winOscar: movieWinOscar,
+        date: Date.now(),
+        creatorId: auth?.currentUser?.uid
+        )}
+*/
